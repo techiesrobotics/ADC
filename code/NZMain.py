@@ -11,6 +11,9 @@ COLOR_RED = 3
 COLOR_YELLOW = 4
 COLOR_OFF = 0
 
+def stablize():
+    drone.hover(0.3)
+
 def setLedColor(color_code):
   
     #Change drone LED based on color_code.
@@ -26,11 +29,9 @@ def setLedColor(color_code):
         drone.set_drone_LED(0, 0, 0, 0)
 
 
-def raiseToHeight(drone, target_height):
+def raiseToHeight(target_height, raise_speed):
     #Raise the drone until it reaches target_height (cm), then hover.
-    RAISE_SPEED = 20
-    HOVER_SPEED = 0
-
+   
     while True:
         height = drone.get_bottom_range("cm")
         print("== in the while loop Height:", height)
@@ -41,12 +42,12 @@ def raiseToHeight(drone, target_height):
             print("Reached target height")
             break
 
-        drone.set_throttle(RAISE_SPEED)
+        drone.set_throttle(raise_speed)
         print("== not reached the Height:", height)
 
         drone.move(0.3)
         
-def descendToHeight(drone, target_height):
+def descendToHeight(target_height, descend_speed):
     
     #Gradually descend until the drone reaches target_height (cm),
     #then hover.
@@ -60,8 +61,53 @@ def descendToHeight(drone, target_height):
             drone.move(0.8)
             print("Reached target height. Hovering.")
             break
-        drone.set_throttle(DESCEND_SPEED)
+        drone.set_throttle(descend_speed)
         drone.move(0.3)
+
+def passRedArch_GreenKeyhole(distance):
+    # raise to the green circle level,
+    raiseToHeight(150, 20)
+    print("===========after raiseToHeight")
+    #  then move forward to pass red arch adn green circle
+    drone.move_forward(distance, "cm", 25)
+    print("==========pass red arch and green circle")
+
+def flyThroughPanel():
+    ############## go through the panel start ==============
+    # descend to the same level as circle on the panel
+    #descendToHeight(40, -30)
+    # move to pass the panel 
+    drone.move_forward(30, "cm", 15)
+    print("enter the circle")
+    drone.hover(0.4)
+    drone.move_right(40, "cm", 15)  # change the speed later
+    print("exit the right circle")
+    stablize()
+
+def goBackToPath():
+    # after exit, go back to the normal path
+    drone.move_forward(30, "cm", 20)
+    print("===========go through the panel")
+    drone.move_left(30, "cm", 20)
+    drone.move_forward(30, "cm", 20)
+    print("==========before go through the tunnel")
+
+def goThroughTunnel():
+    raiseToHeight(100, 15)  # tunnel height
+    drone.move_forward(30, "cm", 20) # pass the tunnel
+
+def goThroughYellowKeyhole():
+    #descend to the yellw circle
+    descendToHeight(40, -30)
+    setLedColor(COLOR_OFF)
+    stablize()
+    # pass the yellow circle
+    drone.move_right(30, "cm", 20) 
+
+def  goThroughBlueArch():
+    drone.move_forward(30, "cm", 20) 
+    drone.move_left(30, "cm", 20) 
+    drone.move_forward(30, "cm", 20) 
 
 
 # -------- MAIN --------
@@ -70,51 +116,19 @@ def main():
     drone = Drone()
     drone.connect()
     drone.takeoff()
-    drone.hover(2)
+    drone.hover(0.4)
     print("===========after takeoff")
-    # raise to a height that can go through 
-    #raiseToHeight(drone, 150)
-    print("===========after raiseToHeight")
-
-    # move through red arch and green circle
-    drone.set_pitch(0)
-    drone.set_roll(0)
-    drone.set_yaw(0)
-    drone.move(0.5)
-
-    drone.move_forward(50, "cm", 25)
-
+    passRedArch_GreenKeyhole(40)   # TODO_1 INPUT flight distance
     # set the blue color
     setLedColor(COLOR_BLUE)  
-
-    ############## go through the panel start ==============
-    # descend to the same level as circle
-    descendToHeight(drone, 25)
-    # move to pass the panel 
-    drone.move_forward(30, "cm", 20)
-     
-    drone.move_right(30, "cm", 20)  # change the speed later
-    
-    ############## go through the panel end maybe -- this can repeat multiple times ==============
-    # after exit, go back to the normal path
-    drone.move_forward(30, "cm", 20)
-    print("===========go through the panel")
-    drone.move_left(30, "cm", 20)
-    drone.move_forward(30, "cm", 20)
+    flyThroughPanel() # TODO_2 Adjust flight distance
+    goBackToPath() # TODO_2 Adjust flight distance
+    stablize()
     setLedColor(COLOR_GREEN)
-    raiseToHeight(drone, 100)  # tunnel height
-    drone.move_forward(30, "cm", 20) # pass the tunnel
-    #descend to the yellw circle
-    
-    descendToHeight(drone, 40)
-    setLedColor(COLOR_OFF)
-    # pass the yellow circle
-    drone.move_right(30, "cm", 20) 
-    # pass the blue arch
-    drone.move_forward(30, "cm", 20)  # adjust the distance to land
-   
-    #set_led_by_number(drone, COLOR_OFF)
-    drone.land()
+    goThroughTunnel()
+    goThroughYellowKeyhole()
+    goThroughBlueArch()
+    drone.land()  
 
 
 # -------- Run Program --------
