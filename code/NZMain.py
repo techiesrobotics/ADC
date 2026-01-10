@@ -7,8 +7,8 @@ TOLERANCE = 3
 #====================== Change LED Color============
 COLOR_BLUE = 1
 COLOR_GREEN = 2
-COLOR_RED = 3
-COLOR_YELLOW = 4
+#COLOR_RED = 3
+#COLOR_YELLOW = 4
 COLOR_OFF = 0
 
 def stablize():
@@ -20,12 +20,15 @@ def setLedColor(color_code):
         drone.set_drone_LED(0, 0, 255, 100)
     elif color_code == COLOR_GREEN:      # Green
         drone.set_drone_LED(0, 255, 0, 100)
+    else:                      # Off / default
+        drone.set_drone_LED(0, 0, 0, 0)
+    '''
     elif color_code == COLOR_RED:      # Red
         drone.set_drone_LED(255, 0, 0, 100)
     elif color_code == COLOR_YELLOW:      # Yellow
         drone.set_drone_LED(255, 255, 0, 100)
-    else:                      # Off / default
-        drone.set_drone_LED(0, 0, 0, 0)
+    '''
+  
 
 def raiseToHeight(target_height, raise_speed):
     """
@@ -35,7 +38,6 @@ def raiseToHeight(target_height, raise_speed):
     print("raiseToHeight:", target_height, raise_speed)
 
     TOLERANCE = 3        # cm, handles sensor noise
-    MOVE_TIME = 0.3     # seconds per step
 
     while True:
         height = drone.get_bottom_range("cm")
@@ -47,10 +49,9 @@ def raiseToHeight(target_height, raise_speed):
             drone.hover(0.4)          # stabilize
             print("Reached target height --", height)
             break
-
         # Continue ascending
         drone.set_throttle(raise_speed)
-        drone.move(MOVE_TIME)
+        drone.move(0.3)
 
 def descendToHeight(target_height, descend_speed):
     """
@@ -96,9 +97,9 @@ def goBackToPath():
     # after exit, go back to the normal path
     drone.move_forward(30, "cm", 20)
     print("===========go through the panel")
-    stablize()
+    #stablize()
     drone.move_left(30, "cm", 20)
-    stablize()
+    #stablize()
     drone.move_forward(30, "cm", 20)
     stablize()
     print("==========before go through the tunnel")
@@ -140,21 +141,20 @@ def main():
     drone.connect()
     drone.takeoff()
     drone.hover(0.4)
-    #raiseToHeight(100, 30)
-    descendToHeight(30, 30)
+
     print("===========after takeoff")
-    #passRedArch_GreenKeyhole()   # TODO_1 INPUT flight distance
+    passRedArch_GreenKeyhole()   # TODO_1 INPUT flight distance
     # set the blue color
-    #setLedColor(COLOR_BLUE)  
-    #flyThroughPanel() # TODO_2 Adjust flight distance
-    #goBackToPath() # TODO_2 Adjust flightxs2 distance
-    #stablize()
-    #setLedColor(COLOR_GREEN)
-    #goThroughTunnel()
-    #setLedColor(COLOR_OFF)
+    setLedColor(COLOR_BLUE)  
+    flyThroughPanel() # TODO_2 Adjust flight distance
+    goBackToPath() # TODO_2 Adjust flightxs2 distance
+    stablize()
+    setLedColor(COLOR_GREEN)
+    goThroughTunnel()
+    setLedColor(COLOR_OFF)
     #setLedColor(COLOR_RED)
-    #goThroughYellowKeyhole()
-    #goThroughBlueArch()
+    goThroughYellowKeyhole()
+    goThroughBlueArch()
     drone.land()  
 
 
