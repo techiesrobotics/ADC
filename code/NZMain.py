@@ -7,10 +7,35 @@ TOLERANCE = 3
 #====================== Change LED Color============
 COLOR_BLUE = 1
 COLOR_GREEN = 2
-#COLOR_RED = 3
-#COLOR_YELLOW = 4
+COLOR_RED = 3
+COLOR_YELLOW = 4
 COLOR_OFF = 0
 
+
+# -------- MAIN --------
+def main():
+
+    drone = Drone()
+    drone.connect()
+    #drone.takeoff()
+    #drone.hover(0.4)
+    setLedColor(COLOR_GREEN) 
+    '''
+    print("===========after takeoff")
+    passRedArch_GreenKeyhole()   # TODO_1 INPUT flight distance
+    # set the blue color
+    setLedColor(COLOR_BLUE)  
+    flyThroughPanel() # TODO_2 Adjust flight distance
+    goBackToPath() # TODO_2 Adjust flightxs2 distance
+    stablize()
+    setLedColor(COLOR_GREEN)
+    goThroughTunnel()
+    setLedColor(COLOR_OFF)
+    #setLedColor(COLOR_RED)
+    goThroughYellowKeyhole()
+    goThroughBlueArch()
+    drone.land()  
+    '''
 def stablize():
     drone.hover(0.4)
 
@@ -20,15 +45,12 @@ def setLedColor(color_code):
         drone.set_drone_LED(0, 0, 255, 100)
     elif color_code == COLOR_GREEN:      # Green
         drone.set_drone_LED(0, 255, 0, 100)
-    else:                      # Off / default
-        drone.set_drone_LED(0, 0, 0, 0)
-    '''
     elif color_code == COLOR_RED:      # Red
         drone.set_drone_LED(255, 0, 0, 100)
     elif color_code == COLOR_YELLOW:      # Yellow
         drone.set_drone_LED(255, 255, 0, 100)
-    '''
-  
+    else:                      # Off / default
+        drone.set_drone_LED(0, 0, 0, 0)
 
 def raiseToHeight(target_height, raise_speed):
     """
@@ -134,28 +156,7 @@ def  goThroughBlueArch():
     print("goThroughBlueArch, end")
 
 
-# -------- MAIN --------
-def main():
 
-    drone = Drone()
-    drone.connect()
-    drone.takeoff()
-    drone.hover(0.4)
-
-    print("===========after takeoff")
-    passRedArch_GreenKeyhole()   # TODO_1 INPUT flight distance
-    # set the blue color
-    setLedColor(COLOR_BLUE)  
-    flyThroughPanel() # TODO_2 Adjust flight distance
-    goBackToPath() # TODO_2 Adjust flightxs2 distance
-    stablize()
-    setLedColor(COLOR_GREEN)
-    goThroughTunnel()
-    setLedColor(COLOR_OFF)
-    #setLedColor(COLOR_RED)
-    goThroughYellowKeyhole()
-    goThroughBlueArch()
-    drone.land()  
 
 
 # -------- Run Program --------
