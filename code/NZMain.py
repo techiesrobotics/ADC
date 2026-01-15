@@ -20,7 +20,7 @@ def main():
     #drone.takeoff()
     #drone.hover(0.4)
     setLedColor(COLOR_GREEN) 
-    '''
+    
     print("===========after takeoff")
     passRedArch_GreenKeyhole()   # TODO_1 INPUT flight distance
     # set the blue color
@@ -35,7 +35,7 @@ def main():
     goThroughYellowKeyhole()
     goThroughBlueArch()
     drone.land()  
-    '''
+    
 def stablize():
     drone.hover(0.4)
 
