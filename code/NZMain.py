@@ -1,3 +1,4 @@
+
 from codrone_edu.drone import *
 DESIRED_HEIGHT = 60 #cm
 LOWEST_HEIGHT = 25 #cm
@@ -16,15 +17,16 @@ COLOR_OFF = 0
 def main():
 
     drone = Drone()
-    drone.connect()
+    drone.pair()
     drone.takeoff()
     drone.hover(0.4)
     setLedColor(COLOR_GREEN) 
     
-    print("===========after takeoff")
+    print("===========after takeoff, before passRedArch_GreenKeyhole")
     passRedArch_GreenKeyhole()   # TODO_1 INPUT flight distance
     # set the blue color
     setLedColor(COLOR_BLUE)  
+    
     flyThroughPanel() # TODO_2 Adjust flight distance
     goBackToPath() # TODO_2 Adjust flightxs2 distance
     stablize()
@@ -35,6 +37,7 @@ def main():
     goThroughYellowKeyhole()
     goThroughBlueArch()
     drone.land()  
+    
     
 def stablize():
     drone.hover(0.4)
@@ -96,29 +99,40 @@ def descendToHeight(target_height, descend_speed):
 
 
 def passRedArch_GreenKeyhole():
+    print("=====in passRedArch_GreenKeyhole")
     # raise to the green circle level,
     raiseToHeight(100, 15) #TODO_1 Find height after takeoff and make sure it goes to panel
     print("===========after raiseToHeight")
     #  then move forward to pass red arch adn green circle
     stablize()
-    drone.avoid_wall(80,30) #approaching the ring
+    drone.avoid_wall(10,30) #approaching the ring
+    
     #TODO_2 find out good time for first parameter
     raiseToHeight(150,15)#TODO_3 find optimal height to raise
     drone.move_forward(30, "cm", 25) #pass through the ring
 
-    print("==========pass red arch and green circle")
+    print("==========out passRedArch_GreenKeyhole")
 
+def goThroughGreenHole():
+    drone.avoid_wall(10, 50)
+    drone.set_throttle(30)
+    drone.move(2)
+    # Stop upward movement
+    drone.set_throttle(0)
+    drone.hover(2)
+    drone.move_forward(20, "cm", 3)
 
 def flyThroughPanel():
     ############## go through the panel start ==============
     # descend to the same level as circle on the panel
+    print("=========in flyThroughPanel")
     descendToHeight(40, 30) #TODO find optimal height
     stablize()
     # move to pass the panel 
     drone.move_forward(30, "cm", 15) #TODO find optimal distance
-    print("enter the circle")
+    print("=========after move_forward")
     drone.move_right(40, "cm", 15)  #TODO find optimal distance
-    print("exit the right circle")
+    print("=========after moveright, out of right hole")
 
 def goBackToPath(): #figure out the best strategy
     # after exit, go back to the normal path
