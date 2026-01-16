@@ -17,8 +17,8 @@ def main():
 
     drone = Drone()
     drone.connect()
-    #drone.takeoff()
-    #drone.hover(0.4)
+    drone.takeoff()
+    drone.hover(0.4)
     setLedColor(COLOR_GREEN) 
     
     print("===========after takeoff")
@@ -97,50 +97,57 @@ def descendToHeight(target_height, descend_speed):
 
 def passRedArch_GreenKeyhole():
     # raise to the green circle level,
-    raiseToHeight(100, 15)
+    raiseToHeight(100, 15) #TODO_1 Find height after takeoff and make sure it goes to panel
     print("===========after raiseToHeight")
     #  then move forward to pass red arch adn green circle
     stablize()
-    drone.move_forward(30, "cm", 25)
+    drone.avoid_wall(80,30) #approaching the ring
+    #TODO_2 find out good time for first parameter
+    raiseToHeight(150,15)#TODO_3 find optimal height to raise
+    drone.move_forward(30, "cm", 25) #pass through the ring
+
     print("==========pass red arch and green circle")
+
 
 def flyThroughPanel():
     ############## go through the panel start ==============
     # descend to the same level as circle on the panel
-    descendToHeight(40, 30)
+    descendToHeight(40, 30) #TODO find optimal height
     stablize()
     # move to pass the panel 
-    drone.move_forward(30, "cm", 15)
+    drone.move_forward(30, "cm", 15) #TODO find optimal distance
     print("enter the circle")
-    drone.move_right(40, "cm", 15)  # change the speed later
+    drone.move_right(40, "cm", 15)  #TODO find optimal distance
     print("exit the right circle")
 
-def goBackToPath():
+def goBackToPath(): #figure out the best strategy
     # after exit, go back to the normal path
-    drone.move_forward(30, "cm", 20)
+    drone.move_forward(30, "cm", 20) #TODO find optimal distance
     print("===========go through the panel")
     #stablize()
-    drone.move_left(30, "cm", 20)
+    drone.move_left(30, "cm", 20) #TODO find optimal distance
     #stablize()
-    drone.move_forward(30, "cm", 20)
+    drone.move_forward(30, "cm", 20) #TODO find optimal distance
     stablize()
     print("==========before go through the tunnel")
 
 def goThroughTunnel():
-    raiseToHeight(100, 15)  # tunnel height
+    raiseToHeight(100, 15)  #TODO find optimal height
     stablize()
-    drone.move_forward(25, "cm", 15) # pass the tunnel
+    drone.move_forward(25, "cm", 15) # TODO find optimal distnace, pass the tunnel
     stablize()
 
 def goThroughYellowKeyhole():
     #descend to the yellw circle
+    drone.move_left(30, "cm", 20) #TODO find optimal distance
     descendToHeight(40, 30)
     setLedColor(COLOR_OFF)
     stablize()
     # go through the hole
-    drone.move_right(30, "cm", 20) 
+    drone.move_right(30, "cm", 20) #TODO find optimal distance
     stablize()
     # back to original path
+    drone.move_left(30, "cm", 20) #TODO find optimal distance
     drone.move_forward(30, "cm", 15) 
     stablize()
     drone.move_left(30, "cm", 15) 
@@ -154,8 +161,6 @@ def  goThroughBlueArch():
     #stablize()
     drone.move_forward(30, "cm", 20) 
     print("goThroughBlueArch, end")
-
-
 
 
 
