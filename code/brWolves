@@ -1,16 +1,12 @@
 from codrone_edu.drone import *
-DESIRED_HEIGHT = 60 #cm
-LOWEST_HEIGHT = 25 #cm
-DESCEND_SPEED = -30 # negative = down
-ASCEND_SPEED = 15
-TOLERANCE = 3
-#====================== Change LED Color============
+
+#====================== Change LED Color Start============
 COLOR_BLUE = 1
 COLOR_GREEN = 2
 COLOR_RED = 3
 COLOR_YELLOW = 4
 COLOR_OFF = 0
-
+#======================LED Color Definition End============
 
 # -------- MAIN --------
 def main():
@@ -18,16 +14,18 @@ def main():
     drone = Drone()
     drone.connect()
     drone.takeoff()
-    drone.hover(0.4)
-    setLedColor(COLOR_GREEN) 
+    drone.hover(0.4) 
     
     print("===========after takeoff")
     passRedArch_GreenKeyhole()   # TODO_1 INPUT flight distance
     # set the blue color
-    setLedColor(COLOR_BLUE)  
-    flyThroughPanel() # TODO_2 Adjust flight distance
-    goBackToPath() # TODO_2 Adjust flightxs2 distance
+    setLedColor(COLOR_BLUE) 
+    #TODO Make another function to align the tunnel after green keyhole  
+    '''
+    flyThroughPanel() # TODO_2 Adjust flight distance, based on strategy, we may skip this mission
+    goBackToPath() # TODO_2 Adjust flightxs2 distance, we may skip this mission
     stablize()
+    '''
     setLedColor(COLOR_GREEN)
     goThroughTunnel()
     setLedColor(COLOR_OFF)
@@ -56,43 +54,19 @@ def raiseToHeight(target_height, raise_speed):
     """
     Raise the drone until it reaches target_height (cm),
     then stabilize by hovering.
+    This command needs to be implemented a different way because the loop doesn't work
     """
     print("raiseToHeight:", target_height, raise_speed)
 
-    TOLERANCE = 3        # cm, handles sensor noise
-
-    while True:
-        height = drone.get_bottom_range("cm")
-        #print("Current height:", height)
-
-        # Stop ascending once close enough to target height
-        if height >= target_height - TOLERANCE:
-            drone.set_throttle(0)     # stop vertical movement
-            drone.hover(0.4)          # stabilize
-            print("Reached target height --", height)
-            break
-        # Continue ascending
-        drone.set_throttle(raise_speed)
-        drone.move(0.3)
 
 def descendToHeight(target_height, descend_speed):
     """
     Gradually descend until the drone reaches target_height (cm),
     then stabilize by hovering.
+    This command needs to be implemented a different way because the loop doesn't work
     """
     print("descendToHeight", target_height, descend_speed)
-    while True:
-        height = drone.get_bottom_range("cm")
-        print("Current height:", height)
 
-        # Stop descending once close enough to target height
-        if height <= target_height + TOLERANCE:
-            drone.set_throttle(0)     # stop vertical movement
-            drone.hover(0.4)          # stabilize
-            print("Reached target height. Hovering at:", height)
-            break
-        drone.set_throttle(-1 * descend_speed)   # descend_speed must be negative
-        drone.move(0.3)
 
 
 def passRedArch_GreenKeyhole():
@@ -132,8 +106,9 @@ def goBackToPath(): #figure out the best strategy
     print("==========before go through the tunnel")
 
 def goThroughTunnel():
-    raiseToHeight(100, 15)  #TODO find optimal height
-    stablize()
+    #Since we are not doing the panel mission, we do not need to raise up.
+    #raiseToHeight(100, 15)  #TODO find optimal height
+    #stablize()
     drone.move_forward(25, "cm", 15) # TODO find optimal distnace, pass the tunnel
     stablize()
 
