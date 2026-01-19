@@ -1,0 +1,67 @@
+from codrone_edu.drone import *
+HOVER_TIME = 0.5
+SPEED = 0.5
+drone = Drone()
+drone.pair()
+
+def printError():
+    errors = drone.get_error_data()
+    if errors:
+        print(f"Current Error State: {errors}") # Prints specific error messages [10]
+
+def resetGyro():
+    drone.reset_gyro() 
+    drone.reset_trim()
+    print("")
+
+def moveForward(distance, speed):
+    drone.move_distance(distance, 0, 0, speed) # move forward 0.5m at 0.5m/s
+    drone.hover(HOVER_TIME)
+    print("=====move forward")
+
+def moveBackward(distance, speed):
+    drone.move_distance(-1*distance, 0, 0, speed) # move backward 0.5m at 0.5m/s
+    drone.hover(HOVER_TIME)
+    print("=====move backward")
+
+def moveLeft(distance, speed):
+    drone.move_distance(0, distance, 0, speed) # move left 0.50m at 0.50m/s
+    drone.hover(HOVER_TIME)
+    print("=====move left")
+
+def moveRight(distance, speed):
+    drone.move_distance(0, -1*distance, 0, speed) # move left 0.50m at 0.50m/s
+    drone.hover(HOVER_TIME)
+    print("=====move right")
+
+def descendToHeight(target_height, descend_speed):
+    
+    print("targetToHeight", target_height)
+    #height = drone.get_bottom_range("cm")  
+    height = drone.get_height("cm")
+    print("current:", height)
+ 
+    SPEED = 0.6
+    dropHeight =  (target_height - height )/100
+    print("=====dropHeight:", dropHeight)
+    drone.move_distance(0, 0, dropHeight, 0.3) # move down 0.50m at 0.50m/s
+    #resetGyro()
+    #printError()
+    #drone.hover(1)
+
+    
+
+drone.takeoff()
+drone.hover(1)
+#descendToHeight(35, 0.3)  #== descend to the lower circle of the panel
+#drone.hover(2)
+moveForward(0.5, SPEED)
+moveRight(0.5, SPEED)
+moveForward(0.5, SPEED)
+moveLeft(0.5, SPEED)
+moveBackward(0.5, SPEED)
+ 
+
+
+drone.land()
+drone.close()
