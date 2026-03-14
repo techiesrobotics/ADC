@@ -55,11 +55,12 @@ def moveLeft(power, time, hoverTime):
     drone.hover(hoverTime)
 
 def path1():
-    changeHeight(60, 0.6, 2)
+    #changeHeight(60, 0.6, 2)
     # pass gate and green keyhole
-    moveForward(30, 2, 1)
-    changeHeight(70, 1, 2)
-    moveForward(30, 2, 1)
+    moveForward(30, 3.5, 1)
+    changeHeight(30, 3.2, 2)
+    moveForward(30, 3, 1)
+    
     drone.land()
     detectColorandSetLed(1)
 
@@ -71,21 +72,31 @@ def path2():
     moveForward(30, 5, 1)
     drone.land()
     detectColorandSetLed(1)
+    #moveForward(30,10,1)
+
 
 def path3():
-    changeHeight(60, 0.6, 2)
     # pass gate and green keyhole
     moveForward(30, 2, 1)
-    changeHeight(70, 1, 2)
+    changeHeight(30, 2, 2)
     moveForward(30, 2, 1)
-    moveRight(30, 1,1)
+    changeHeight(30, 1, 2)
+    moveForward(30, 10, 1)
+    moveRight(30, 2,1)
+    changeHeight(30,-2,2)
+    moveLeft(30, 2,1)
     moveForward(30,1,1)
-    moveLeft(30, 1,1)
-    moveForward(30,1,1)
+    moveRight(30,1,1)
+    moveForward(30,3,1)
     drone.land()
     drone.close()
     
 
-path1()
+#path1()
 #path2()
 #path3()
+'''
+moveForward(30,5,1)
+drone.land()
+'''
+drone.close()
